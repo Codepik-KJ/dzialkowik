@@ -1,0 +1,20 @@
+{
+    "name": "junipertheme/junipertheme",
+    "type": "library",
+    "require": {
+        "timber/timber": "^1.19",
+        "palmiak/timber-acf-wp-blocks": "^1.15"
+    },
+    "autoload": {
+        "psr-4": {
+            "Juniper\\": "inc",
+            "Dzialkowik\\": "inc"
+        }
+    },
+    "authors": [
+        {
+            "name": "bartnovak",
+            "email": "b.nowak@osomstudio.com"
+        }
+    ]
+}

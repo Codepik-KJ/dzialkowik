@@ -1,0 +1,10 @@
+{% extends "base.twig" %}
+{% block content %}
+    <h1>{{ post.title }}</h1>
+    <p>{{ post.post_content }}</p>
+    {% for rod in posts %}
+        <article>
+            <h2><a href="{{ rod.link }}">{{ rod.title }}</a></h2>
+        </article>
+    {% endfor %}
+{% endblock %}
