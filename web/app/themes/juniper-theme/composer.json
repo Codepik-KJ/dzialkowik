@@ -11,6 +11,13 @@
             "Dzialkowik\\": "inc"
         }
     },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "allow-plugins": {
+            "composer/installers": true
+        }
+    },
     "authors": [
         {
             "name": "bartnovak",
