@@ -27,26 +27,25 @@ class PlotsCPT {
 				'public'       => true,
 				'has_archive'  => false,
 				'show_in_rest' => true,
-				'supports'     => array( 'title', 'editor' ),
+				'supports'     => array( 'title' ),
 				'capabilities' => array(
-					'edit_post'          => 'edit_rod',
-					'edit_posts'         => 'edit_rods',
-					'edit_others_posts'  => 'edit_others_rods',
-					'publish_posts'      => 'publish_rods',
-					'read_post'          => 'read_rod',
-					'read_private_posts' => 'read_private_rods',
-					'delete_post'        => 'delete_rod',
+					'edit_post'          => 'edit_plot',
+					'edit_posts'         => 'edit_plots',
+					'edit_others_posts'  => 'edit_others_plots',
+					'publish_posts'      => 'publish_plots',
+					'read_post'          => 'read_plot',
+					'read_private_posts' => 'read_private_plots',
+					'delete_post'        => 'delete_plot',
 				),
-				'map_meta_cap' => true,
 				'rewrite'      => array(
-					'slug'       => 'rod/%rod_name%',
+					'slug'       => '%city%/rod/%rod_name%',
 					'with_front' => false,
 				),
 			)
 		);
 		add_rewrite_rule(
-			'rod/(.*)/(.*)',
-			'index.php?post_type=plots&name=$matches[2]',
+			'(.*)/rod/(.*)/(.*)',
+			'index.php?post_type=plots&name=$matches[3]',
 			'top'
 		);
 	}
@@ -78,8 +77,11 @@ class PlotsCPT {
 	public function post_type_as_link( $link, $post_id ) {
 		$rod = get_field( 'rod', $post_id );
 		if ( get_post_type( $post_id ) === 'plots' && $rod ) {
-			$rod_title = strtolower( get_field( 'rod_title', $rod->ID ) );
-			$link      = str_replace( '%rod_name%', $rod_title, $link );
+			$dzialkowik_rod_cpt = new RODCPT();
+			$city               = $dzialkowik_rod_cpt->get_rod_city_slug( $rod->ID );
+			$rod_title          = strtolower( get_field( 'rod_title', $rod->ID ) );
+			$link               = str_replace( '%rod_name%', $rod_title, $link );
+			$link               = str_replace( '%city%', $city, $link );
 		}
 		return $link;
 	}

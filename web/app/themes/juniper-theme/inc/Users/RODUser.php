@@ -32,6 +32,13 @@ class RODUser extends UserType {
 			$role->add_cap( 'read_rod' );
 			$role->add_cap( 'read_private_rods' );
 			$role->add_cap( 'delete_rod' );
+			$role->add_cap( 'edit_plot' );
+			$role->add_cap( 'edit_plots' );
+			$role->add_cap( 'edit_others_plots' );
+			$role->add_cap( 'publish_plots' );
+			$role->add_cap( 'read_plot' );
+			$role->add_cap( 'read_private_plots' );
+			$role->add_cap( 'delete_plot' );
 		}
 	}
 
