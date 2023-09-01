@@ -32,7 +32,6 @@ function init_forms() {
 add_action( 'save_post', 'set_rod_city_tax' );
 function set_rod_city_tax( $post_id ) {
 	$city = get_post_meta( $post_id, 'city', true );
-	wp_set_object_terms( $post_id, array(), 'city' );
 	wp_set_object_terms( $post_id, array( $city ), 'city' );
 }
 
