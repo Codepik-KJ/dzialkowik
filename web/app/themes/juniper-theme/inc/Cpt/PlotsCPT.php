@@ -10,10 +10,6 @@ class PlotsCPT {
 		$this->cpt_slug = 'plots';
 		$this->cpt_name = 'Działka';
 
-		add_action( 'init', array( $this, 'register_custom_cpt' ) );
-		add_action( 'acf/save_post', array( $this, 'set_plot_title' ) );
-		add_filter( 'post_type_link', array( $this, 'post_type_as_link' ), 10, 2 );
-
 	}
 
 	public function register_custom_cpt() {
@@ -38,14 +34,16 @@ class PlotsCPT {
 					'delete_post'        => 'delete_plot',
 				),
 				'rewrite'      => array(
-					'slug'       => '%city%/rod/%rod_name%',
+					'slug'       => 'rod/%city_name%/%rod_name%',
 					'with_front' => false,
 				),
 			)
 		);
+		add_rewrite_tag( '%city_name%', '([^&]+)', 'city_name=' );
+		add_rewrite_tag( '%rod_name%', '([^&]+)', 'rod_name=' );
 		add_rewrite_rule(
-			'(.*)/rod/(.*)/(.*)',
-			'index.php?post_type=plots&name=$matches[3]',
+			'^rod/([^/]*)/([^/]*)/([^/]*)/?$',
+			'index.php?post_type=plots&city_name=$matches[1]&rod_name=$matches[2]&name=$matches[3]',
 			'top'
 		);
 	}
@@ -81,7 +79,7 @@ class PlotsCPT {
 			$city               = $dzialkowik_rod_cpt->get_rod_city_slug( $rod->ID );
 			$rod_title          = strtolower( get_field( 'rod_title', $rod->ID ) );
 			$link               = str_replace( '%rod_name%', $rod_title, $link );
-			$link               = str_replace( '%city%', $city, $link );
+			$link               = str_replace( '%city_name%', $city, $link );
 		}
 		return $link;
 	}

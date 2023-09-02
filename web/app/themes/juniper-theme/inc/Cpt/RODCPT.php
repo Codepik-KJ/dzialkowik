@@ -9,9 +9,6 @@ class RODCPT {
 	public function __construct() {
 		$this->cpt_slug = 'rod';
 		$this->cpt_name = 'ROD';
-
-		add_action( 'init', array( $this, 'register_custom_cpt' ) );
-		add_filter( 'post_type_link', array( $this, 'change_rod_title_as_city_tax' ), 10, 2 );
 	}
 
 	public function register_custom_cpt() {
@@ -23,7 +20,7 @@ class RODCPT {
 					'singular_name' => $this->cpt_name,
 				),
 				'public'       => true,
-				'has_archive'  => false,
+				'has_archive'  => true,
 				'show_in_rest' => true,
 				'supports'     => array( 'title' ),
 				'taxonomies'   => array( 'city' ),
@@ -37,14 +34,15 @@ class RODCPT {
 					'delete_post'        => 'delete_rod',
 				),
 				'rewrite'      => array(
-					'slug'       => '%city%/rod',
+					'slug'       => 'rod/%rod_city_name%',
 					'with_front' => false,
 				),
 			)
 		);
+		add_rewrite_tag( '%rod_city_name%', '([^&]+)', 'rod_city_name=' );
 		add_rewrite_rule(
-			'(.*)/rod/(.*)',
-			'index.php?post_type=rod&name=$matches[2]',
+			'^rod/([^/]*)/([^/]*)/?$',
+			'index.php?post_type=rod&rod_city_name=$matches[1]&name=$matches[2]',
 			'top'
 		);
 	}
@@ -52,7 +50,7 @@ class RODCPT {
 	public function change_rod_title_as_city_tax( $link, $post_id ) {
 
 		if ( get_post_type( $post_id ) === 'rod' ) {
-			$link = str_replace( '%city%', $this->get_rod_city_slug( $post_id ), $link );
+			$link = str_replace( '%rod_city_name%', $this->get_rod_city_slug( $post_id ), $link );
 		}
 		return $link;
 	}
@@ -64,5 +62,21 @@ class RODCPT {
 			$city_name = $get_post_terms[0]->slug;
 		}
 		return $city_name;
+	}
+
+	public function is_rod_cpt( $post_id ) {
+		$post_type = get_post_type( $post_id );
+		if ( $post_type !== 'rod' ) {
+			return false;
+		}
+		return true;
+	}
+
+	public function set_rod_city_tax( $post_id ) {
+		if ( ! $this->is_rod_cpt( $post_id ) ) {
+			return;
+		}
+		$city = get_post_meta( $post_id, 'city', true );
+		wp_set_object_terms( $post_id, array( $city ), 'city' );
 	}
 }
