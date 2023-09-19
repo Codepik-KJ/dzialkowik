@@ -3,6 +3,7 @@
 	Template name: ROD
 */
 
+//TODO ustawiłem stronę ROD i nie ładuje mi się twig który powinien :|
 
 $context          = Timber::context();
 $args             = array(
