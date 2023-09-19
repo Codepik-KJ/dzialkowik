@@ -10,7 +10,10 @@ class EventsCPT {
 		$this->cpt_slug = 'events';
 		$this->cpt_name = 'Wydarzenia';
 
-		add_action( 'init', array( $this, 'register_custom_cpt' ) );
+//		TODO tutaj masz w construcie register_custom_cpt wywołany -> nie powinno go tutaj być (w construcie nie wrzucamy takich rzeczy). Masz je wszystkie w include.php.
+//		TODO Tego jednego akurat brakuje -> więc wydarzenia się nie ładują.
+
+//		add_action( 'init', array( $this, 'register_custom_cpt' ) );
 	}
 
 	public function register_custom_cpt() {
