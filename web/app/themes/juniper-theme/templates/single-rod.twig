@@ -1,0 +1,12 @@
+{% extends "base.twig" %}
+
+{% block content %}
+    <h1>ROD {{ post.title }}</h1>
+    <h2>Temperatura w {{ city_name }}: {{ weather.temp }} °C</h2>
+    <h2>Wykaz działek:</h2>
+    <ul>
+        {% for single_plot in plots_in_rod %}
+            <h2>{{ single_plot.post_title }}</h2>
+        {% endfor %}
+    </ul>
+{% endblock %}

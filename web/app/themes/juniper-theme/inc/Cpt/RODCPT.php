@@ -2,6 +2,8 @@
 
 namespace Dzialkowik\Cpt;
 
+use Dzialkowik\Taxonomies\CityTax;
+
 class RODCPT {
 	public string $cpt_slug;
 	public string $cpt_name;
@@ -76,7 +78,10 @@ class RODCPT {
 		if ( ! $this->is_rod_cpt( $post_id ) ) {
 			return;
 		}
-		$city = get_post_meta( $post_id, 'city', true );
+		$city     = get_post_meta( $post_id, 'city', true );
+		$city_tax = new CityTax();
+		$city_tax->update_city_coords( $city );
 		wp_set_object_terms( $post_id, array( $city ), 'city' );
 	}
+
 }
