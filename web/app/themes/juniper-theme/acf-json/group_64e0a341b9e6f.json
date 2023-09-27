@@ -65,7 +65,7 @@
             "role": [
                 "plot_user"
             ],
-            "return_format": "array",
+            "return_format": "id",
             "multiple": 0,
             "allow_null": 0
         }
@@ -88,5 +88,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1693242460
+    "modified": 1695836346
 }

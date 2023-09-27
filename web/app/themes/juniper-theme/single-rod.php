@@ -27,14 +27,14 @@ $args                    = array(
 		),
 	),
 );
-$query                   = new WP_Query( $args );
-$context['plots_in_rod'] = $query->get_posts();
+$context['plots_in_rod'] = new Timber\PostQuery( $args );
 
-$rod_address        = get_field( 'city' );
-$city_tax           = new CityTax();
-$get_city_weather   = $city_tax->get_taxonomy_weather_data( $rod_address );
-$context['city_name'] = $rod_address;
-$context['weather'] = $get_city_weather->main;
+$rod_address                = get_field( 'city' );
+$city_tax                   = new CityTax();
+$get_city_weather           = $city_tax->get_taxonomy_weather_data( $rod_address );
+$context['city_name']       = $rod_address;
+$context['weather']         = $get_city_weather->main;
+$context['rod_description'] = get_field( 'opis_rod' );
 
 
 if ( post_password_required( $timber_post->ID ) ) {

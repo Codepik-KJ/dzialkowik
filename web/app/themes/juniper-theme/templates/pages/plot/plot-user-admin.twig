@@ -1,0 +1,14 @@
+{% extends "base.twig" %}
+{% block content %}
+    <h1>PLOT ADMIN</h1>
+    <ul>
+        {% for plot in user_plots %}
+            <div>
+                <h2>{{ plot.post_title }}</h2>
+                <a href="{{ plot.link }}">Zobacz</a>
+                <a href="{{ plot.link }}?edit">Edytuj</a>
+            </div>
+
+        {% endfor %}
+    </ul>
+{% endblock %}
