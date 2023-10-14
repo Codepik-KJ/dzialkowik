@@ -34,7 +34,10 @@ $rod_address                = get_field( 'city' );
 $city_tax                   = new CityTax();
 $get_city_weather           = $city_tax->get_taxonomy_weather_data( $rod_address );
 $context['city_name']       = $rod_address;
-$context['weather']         = $get_city_weather->main;
+$context['weather']         = '';
+if ( $get_city_weather ) {
+	$context['weather'] = $get_city_weather->main;
+}
 $context['rod_description'] = get_field( 'opis_rod' );
 
 

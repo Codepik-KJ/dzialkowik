@@ -13,6 +13,10 @@
  * to load your dependencies and initialize Timber. If you are using Timber via the WordPress.org
  * plug-in, you can safely delete this block.
  */
+
+use Dzialkowik\GoogleMaps\GoogleMapsConfig;
+use Dzialkowik\OpenWeather\OWConfig;
+
 $composer_autoload = __DIR__ . '/vendor/autoload.php';
 
 if ( file_exists( $composer_autoload ) ) {

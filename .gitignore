@@ -37,3 +37,4 @@ web/app/cache
 web/app/w3tc-config
 
 !web/.htaccess
+error_log.txt

@@ -53,6 +53,23 @@ class RODUser extends UserType {
 		return $all_roles;
 	}
 
+	public function show_users_own_content( $wp_query_obj ) {
+		if ( ! is_admin() ) {
+			return;
+		}
+
+		global $current_user;
+
+		if ( ! is_a( $current_user, 'WP_User' ) ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'administrator' ) ) {
+			$wp_query_obj->set( 'author', $current_user->ID );
+		}
+
+	}
+
 
 	public function add_RODCPT_caps() {
 		$roles = array( get_role( 'administrator' ), get_role( 'rod_user' ) );
@@ -75,6 +92,26 @@ class RODUser extends UserType {
 			$role->add_cap( 'create_users' );
 			$role->add_cap( 'promote_users' );
 		}
+	}
+
+	public function list_only_users_created_by_current_user( $args ) {
+		global $current_user;
+		if ( ! is_a( $current_user, 'WP_User' ) ) {
+			return $args;
+		}
+		if ( current_user_can( 'administrator' ) ) {
+			return $args;
+		}
+
+		return array( 'meta_key' => 'created_by_user_id', 'meta_value' => $current_user->ID );
+	}
+
+	public function update_user_meta_on_create( $user_id ) {
+		global $current_user;
+		if ( ! is_a( $current_user, 'WP_User' ) ) {
+			return;
+		}
+		update_user_meta( $user_id, 'created_by_user_id', $current_user->ID );
 	}
 
 }

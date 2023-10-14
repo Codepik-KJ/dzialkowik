@@ -42,43 +42,34 @@ class CityTax {
 		if ( ! $term_id ) {
 			return;
 		}
-		$term_lat = get_term_meta( $term_id, 'lat', true );
-		$term_lng = get_term_meta( $term_id, 'lng', true );
+		$term_lat_lng = get_term_meta( $term_id, 'lat_lng', true );
 
-		if ( ! $term_lat && ! $term_lng ) {
+		if ( ! $term_lat_lng ) {
 			$google_maps_config   = new GoogleMapsConfig();
-			$rod_coords_from_maps = $google_maps_config->get_google_maps_coords( $city );
-			$response             = json_decode( $rod_coords_from_maps['body'] );
-			$term_lat             = $response->results[0]->geometry->location->lat;
-			$term_lng             = $response->results[0]->geometry->location->lng;
-
-			update_term_meta( $term_id, 'lat', $term_lat );
-			update_term_meta( $term_id, 'lng', $term_lng );
+			$term_lat_lng = $google_maps_config->request_for_google_maps_data( $city );
+			if ( ! $term_lat_lng ) {
+				return;
+			}
+			update_term_meta( $term_id, 'lat_lng', $term_lat_lng );
 		}
 
 	}
 
 	public function get_city_coords( $term_id ) {
+		$exploded_string = explode( ',', get_term_meta( $term_id, 'lat_lng', true ) );
+		if ( ! $exploded_string ) {
+			return false;
+		}
 		return array(
-			'lat' => get_term_meta( $term_id, 'lat', true ),
-			'lng' => get_term_meta( $term_id, 'lng', true ),
+			'lat' => $exploded_string[0],
+			'lng' => $exploded_string[1],
 		);
 	}
 
 	public function get_taxonomy_weather_data( $city ) {
-		$term_id = $this->get_term_id( $city );
-
-		//TODO Zrobić całkowicie obiektowo
-		if ( false === ( $get_open_weather_data = get_transient( 'get_open_weather_data' ) ) ) {
-			$ow_config             = new OWConfig();
-			$city_coords           = $this->get_city_coords( $term_id );
-			// TODO Maybe make as aexpolde in meta data
-			$get_open_weather_data = $ow_config->get_open_weather_data( $city_coords['lat'], $city_coords['lng'] );
-			set_transient( 'get_open_weather_data', $get_open_weather_data, 18 * HOUR_IN_SECONDS );
-			update_term_meta( $term_id, 'city_weather', json_decode( $get_open_weather_data['body'] ) );
-		}
-		return get_term_meta( $term_id, 'city_weather', true );
-
+		$term_id   = $this->get_term_id( $city );
+		$ow_config = new OWConfig();
+		return $ow_config->get_cached_weather_data( $term_id );
 	}
 
 }
