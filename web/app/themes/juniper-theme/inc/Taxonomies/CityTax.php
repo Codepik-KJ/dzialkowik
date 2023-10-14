@@ -66,12 +66,13 @@ class CityTax {
 	}
 
 	public function get_taxonomy_weather_data( $city ) {
-		$term_id     = $this->get_term_id( $city );
-		$ow_config   = new OWConfig();
-		$city_coords = $this->get_city_coords( $term_id );
+		$term_id = $this->get_term_id( $city );
 
+		//TODO Zrobić całkowicie obiektowo
 		if ( false === ( $get_open_weather_data = get_transient( 'get_open_weather_data' ) ) ) {
-			// It wasn't there, so regenerate the data and save the transient
+			$ow_config             = new OWConfig();
+			$city_coords           = $this->get_city_coords( $term_id );
+			// TODO Maybe make as aexpolde in meta data
 			$get_open_weather_data = $ow_config->get_open_weather_data( $city_coords['lat'], $city_coords['lng'] );
 			set_transient( 'get_open_weather_data', $get_open_weather_data, 18 * HOUR_IN_SECONDS );
 			update_term_meta( $term_id, 'city_weather', json_decode( $get_open_weather_data['body'] ) );

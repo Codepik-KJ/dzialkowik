@@ -23,8 +23,8 @@ class FormConfig {
 					'post_id'      => $this->post_id,
 					'post_title'   => false,
 					'post_content' => false,
-					'field_groups'       => array( 48),
-					'form' => true,
+					'fields'       => array( 'opis_dzialki' ),
+					'form'         => true,
 				)
 			);
 		}

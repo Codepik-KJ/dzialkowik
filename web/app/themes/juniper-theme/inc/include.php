@@ -5,6 +5,7 @@ use Dzialkowik\Cpt\PlotsCPT;
 use Dzialkowik\Cpt\RODCPT;
 use Dzialkowik\Forms\FormConfig;
 use Dzialkowik\Taxonomies\CityTax;
+use Dzialkowik\Taxonomies\RODTax;
 use Dzialkowik\Users\PlotUser;
 use Dzialkowik\Users\RODUser;
 use Dzialkowik\Users\UserConfig;
@@ -15,13 +16,17 @@ $juniper_blocks->include_blocks_functions();
 $dzialkowik_plots_cpt = new PlotsCPT();
 $dzialkowik_rod_cpt   = new RODCPT();
 $rod_user             = new RODUser();
-$plot_user            = new PlotUser();
 $dzialkowik_user      = new UserConfig();
 $city_taxonomy        = new CityTax();
+$rod_taxonomy         = new RODTax();
+$plot_user            = new PlotUser();
+$plot_user->set_dashboard_access();
+$plot_user->set_current_user_id();
 
 add_action( 'init', array( $dzialkowik_plots_cpt, 'register_custom_cpt' ) );
 add_action( 'init', array( $dzialkowik_rod_cpt, 'register_custom_cpt' ) );
 add_action( 'init', array( $city_taxonomy, 'register_custom_taxonomy' ) );
+add_action( 'init', array( $rod_taxonomy, 'register_custom_taxonomy' ) );
 
 add_action( 'acf/save_post', array( $dzialkowik_plots_cpt, 'update_plot_data' ) );
 add_filter( 'post_type_link', array( $dzialkowik_rod_cpt, 'change_rod_title_as_city_tax' ), 10, 2 );

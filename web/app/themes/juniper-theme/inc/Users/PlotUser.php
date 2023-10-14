@@ -6,10 +6,6 @@ class PlotUser extends UserType {
 
 	public $current_user_id;
 
-	public function __construct() {
-		$this->set_dashboard_access();
-		$this->set_current_user_id();
-	}
 
 	public function set_user_role_slug() {
 		$this->user_role_slug = 'plot_user';
@@ -32,7 +28,6 @@ class PlotUser extends UserType {
 	public function is_plot_user() {
 
 		$user = new \WP_User( $this->current_user_id );
-
 		if ( in_array( $this->user_role_slug, $user->roles, true ) ) {
 			return true;
 		}

@@ -16,6 +16,7 @@ $context         = Timber::context();
 $timber_post     = Timber::query_post();
 $context['post'] = $timber_post;
 
+//TODO query by taxonomy ROD
 $args                    = array(
 	'post_type'      => 'plots',
 	'posts_per_page' => -1,

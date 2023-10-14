@@ -23,7 +23,7 @@ class PlotsCPT {
 				'public'       => true,
 				'has_archive'  => false,
 				'show_in_rest' => true,
-				'taxonomies'   => array( 'city' ),
+				'taxonomies'   => array( 'city', 'rod' ),
 				'supports'     => array( 'title' ),
 				'capabilities' => array(
 					'edit_post'          => 'edit_plot',
@@ -71,7 +71,9 @@ class PlotsCPT {
 			'post_name'  => strtolower( $rod_title ) . '/' . $plot_number,
 		);
 		wp_set_object_terms( $post_id, array( $rod_term ), 'city' );
+		wp_set_object_terms( $post_id, array( $rod_title ), 'rod' );
 		wp_update_post( $post_update );
+			wp_update_post( $post_update );
 
 	}
 

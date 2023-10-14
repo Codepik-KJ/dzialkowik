@@ -7,6 +7,7 @@ use Dzialkowik\Users\PlotUser;
 
 $plot_user = new PlotUser();
 $plot_user->set_user_role_slug();
+$plot_user->set_current_user_id();
 
 $context                  = Timber::context();
 $context['current_post']  = new Timber\Post();
