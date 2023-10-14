@@ -7,7 +7,7 @@ class RODTax {
 	public string $taxonomy_name;
 
 	public function __construct() {
-		$this->taxonomy_slug = 'rod';
+		$this->taxonomy_slug = 'rod_tax';
 		$this->taxonomy_name = 'ROD';
 	}
 
@@ -23,7 +23,7 @@ class RODTax {
 
 	}
 	public function get_term_id( $rod_name ) {
-		$get_term = get_term_by( 'name', $rod_name, 'rod' );
+		$get_term = get_term_by( 'name', $rod_name, 'rod_tax' );
 		if ( ! $get_term ) {
 			return false;
 		}

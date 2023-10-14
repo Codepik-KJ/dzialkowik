@@ -1,12 +1,14 @@
 <?php
 namespace Dzialkowik\OpenWeather;
 
+use function Env\env;
+
 class OWConfig {
 	private $api_key;
 	private $units;
 
 	public function __construct() {
-		$this->api_key = '2eec5593db3caa3b5ee7d2e08ed12124';
+		$this->api_key = env('OW_API');
 		$this->units   = 'metric';
 	}
 
