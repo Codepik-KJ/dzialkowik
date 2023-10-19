@@ -66,6 +66,13 @@ class RODUser extends UserType {
 
 		if ( ! current_user_can( 'administrator' ) ) {
 			$wp_query_obj->set( 'author', $current_user->ID );
+			//TODO $wp_query_obj->set( 'meta_query', array(
+			//            array(
+			//                'key'     => 'rod',
+			//                'compare' => '=',
+			//                'value'   => 'rod_id',
+			//            )
+			//        ))
 		}
 
 	}
@@ -104,6 +111,7 @@ class RODUser extends UserType {
 		}
 
 		return array( 'meta_key' => 'created_by_user_id', 'meta_value' => $current_user->ID );
+		//TODO array( 'meta_key' => 'rod_id', 'meta_value' => rod_id );
 	}
 
 	public function update_user_meta_on_create( $user_id ) {
