@@ -51,7 +51,7 @@ class PlotsCPT {
 
 	public function is_plots_cpt( $post_id ) {
 		$post_type = get_post_type( $post_id );
-		if ( $post_type !== 'plots' ) {
+		if ( 'plots' !== $post_type ) {
 			return false;
 		}
 		return true;
