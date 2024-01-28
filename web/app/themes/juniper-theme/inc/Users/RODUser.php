@@ -114,7 +114,10 @@ class RODUser extends UserType {
 			return $args;
 		}
 
-		return array( 'meta_key' => 'created_by_user_id', 'meta_value' => $current_user->ID );
+		return array(
+			'meta_key'   => 'created_by_user_id',
+			'meta_value' => $current_user->ID,
+		);
 		//TODO array( 'meta_key' => 'rod_id', 'meta_value' => rod_id );
 	}
 
