@@ -28,6 +28,8 @@ require_once 'inc/include.php';
 
 function juniper_theme_enqueue() {
 	$refresh_cache_time = time();
+	// TODO Tutaj można wyciągnąć get_template_directory_uri do zmiennej
+
 	wp_enqueue_style( 'app-css', get_template_directory_uri() . '/dist/_app.css', array(), $refresh_cache_time );
 	wp_enqueue_script( 'app-js', get_template_directory_uri() . '/dist/src/js/_app.js', array(), $refresh_cache_time, true );
 }

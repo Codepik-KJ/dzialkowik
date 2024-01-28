@@ -27,7 +27,7 @@ class OWConfig {
 	}
 
 	public function check_request_response( $response ) {
-		if ( $response->cod !== 200 ) {
+		if ( 200 !== $response->cod ) {
 			$logger = new Logger();
 			$logger->log( 'ERROR: ' . $response->cod . ' ' . $response->message );
 			return false;

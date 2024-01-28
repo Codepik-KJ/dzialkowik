@@ -16,15 +16,15 @@ class GoogleMapsConfig {
 			return false;
 		}
 
-		$google_maps_request_url            = 'https://maps.googleapis.com/maps/api/geocode/json?address=' . $address . '&key=' . $this->api_key;
-		$google_maps_request        = wp_remote_request( $google_maps_request_url )['body'];
+		$google_maps_request_url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' . $address . '&key=' . $this->api_key;
+		$google_maps_request     = wp_remote_request( $google_maps_request_url )['body'];
 		//TODO check if is object np. kiedy jest timeout add to logger timeout
 		$google_maps_request_decode = json_decode( $google_maps_request );
 		return $this->check_request_response( $google_maps_request_decode );
 	}
 
 	public function check_request_response( $google_maps_response ) {
-		if ( $google_maps_response->status !== 'OK' ) {
+		if ( 'OK' !== $google_maps_response->status ) {
 			$logger = new Logger();
 			$logger->log( 'ERROR: ' . $google_maps_response->status . ' ' . $google_maps_response->error_message );
 			return false;

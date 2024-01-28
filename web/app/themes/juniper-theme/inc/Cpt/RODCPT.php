@@ -68,7 +68,7 @@ class RODCPT {
 
 	public function is_rod_cpt( $post_id ) {
 		$post_type = get_post_type( $post_id );
-		if ( $post_type !== 'rod' ) {
+		if ( 'rod' !== $post_type ) {
 			return false;
 		}
 		return true;

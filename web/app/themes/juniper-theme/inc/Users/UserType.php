@@ -4,10 +4,10 @@ namespace Dzialkowik\Users;
 
 abstract class UserType extends UserConfig {
 
-	abstract function set_user_role_slug();
-	abstract function set_user_role_display_name();
-	abstract function set_dashboard_access();
-	abstract function add_user_role();
+	abstract public function set_user_role_slug();
+	abstract public function set_user_role_display_name();
+	abstract public function set_dashboard_access();
+	abstract public function add_user_role();
 
 	public function setup_user_role() {
 		$this->set_user_role_slug();

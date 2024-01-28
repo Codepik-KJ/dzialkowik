@@ -81,6 +81,8 @@ class RODUser extends UserType {
 
 
 	public function add_RODCPT_caps() {
+		//TODO te role lepiej wyciągnąć do jakiegoś configa (typu array w obiekcie)
+
 		$roles = array( get_role( 'administrator' ), get_role( 'rod_user' ) );
 		foreach ( $roles as $role ) {
 			$role->add_cap( 'edit_rod' );
@@ -112,7 +114,10 @@ class RODUser extends UserType {
 			return $args;
 		}
 
-		return array( 'meta_key' => 'created_by_user_id', 'meta_value' => $current_user->ID );
+		return array(
+			'meta_key'   => 'created_by_user_id',
+			'meta_value' => $current_user->ID,
+		);
 		//TODO array( 'meta_key' => 'rod_id', 'meta_value' => rod_id );
 	}
 
