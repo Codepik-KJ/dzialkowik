@@ -3,9 +3,9 @@
  * Timber Juniper Theme
  * https://github.com/osomstudio/JuniperTheme
  *
- * @package  WordPress
- * @subpackage  Timber
- * @since   Timber 0.1
+ * @package    WordPress
+ * @subpackage Timber
+ * @since      Timber 0.1
  */
 
 /**
@@ -13,10 +13,14 @@
  * to load your dependencies and initialize Timber. If you are using Timber via the WordPress.org
  * plug-in, you can safely delete this block.
  */
+
+use Dzialkowik\GoogleMaps\GoogleMapsConfig;
+use Dzialkowik\OpenWeather\OWConfig;
+
 $composer_autoload = __DIR__ . '/vendor/autoload.php';
 
 if ( file_exists( $composer_autoload ) ) {
-	require_once $composer_autoload;
+	include_once $composer_autoload;
 	$timber = new Timber\Timber();
 }
 

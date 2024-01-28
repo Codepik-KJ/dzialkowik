@@ -1,0 +1,11 @@
+{% extends "base.twig" %}
+
+{% block content %}
+    <h1>PLOT {{ post.title }}</h1>
+    <h2>OPIS:</h2>
+    <p>{{ post.content }}</p>
+    {{ acf_form_head }}
+    {{ fn('acf_form','form-plot') }}
+
+    {{ plot_form }}
+{% endblock %}

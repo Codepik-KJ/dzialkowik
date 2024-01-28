@@ -4,13 +4,13 @@ namespace Dzialkowik\Forms;
 class FormConfig {
 
 	protected $form_slug;
-	protected $form_fields_id;
 	protected $post_type;
+	protected $post_id;
 
-	public function __construct( $form_slug, $form_fields_id, $post_type ) {
-		$this->form_slug      = $form_slug;
-		$this->form_fields_id = $form_fields_id;
-		$this->post_type      = $post_type;
+	public function __construct( $form_slug, $post_type, $post_id ) {
+		$this->form_slug = $form_slug;
+		$this->post_type = $post_type;
+		$this->post_id   = $post_id;
 	}
 
 	public function register_form() : void {
@@ -20,14 +20,11 @@ class FormConfig {
 			acf_register_form(
 				array(
 					'id'           => $this->form_slug,
-					'post_id'      => 'new_post',
-					'new_post'     => array(
-						'post_type'   => $this->post_type,
-						'post_status' => 'publish',
-					),
-					'field_groups' => array( $this->form_fields_id ),
+					'post_id'      => $this->post_id,
 					'post_title'   => false,
 					'post_content' => false,
+					'fields'       => array( 'opis_dzialki' ),
+					'form'         => true,
 				)
 			);
 		}

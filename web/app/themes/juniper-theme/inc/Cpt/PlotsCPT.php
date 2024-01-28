@@ -23,6 +23,7 @@ class PlotsCPT {
 				'public'       => true,
 				'has_archive'  => false,
 				'show_in_rest' => true,
+				'taxonomies'   => array( 'city', 'rod_tax' ),
 				'supports'     => array( 'title' ),
 				'capabilities' => array(
 					'edit_post'          => 'edit_plot',
@@ -56,19 +57,22 @@ class PlotsCPT {
 		return true;
 	}
 
-	public function set_plot_title( $post_id ) {
+	public function update_plot_data( $post_id ) {
 		if ( ! $this->is_plots_cpt( $post_id ) ) {
 			return;
 		}
 		$rod         = get_field( 'rod', $post_id );
 		$rod_title   = get_field( 'rod_title', $rod->ID );
+		$rod_term    = get_field( 'city', $rod->ID );
 		$plot_number = get_field( 'numer', $post_id );
 		$post_update = array(
 			'ID'         => $post_id,
 			'post_title' => $rod_title . '/' . $plot_number,
 			'post_name'  => strtolower( $rod_title ) . '/' . $plot_number,
 		);
-
+		wp_set_object_terms( $post_id, array( $rod_term ), 'city' );
+		wp_set_object_terms( $post_id, array( $rod_title ), 'rod_tax' );
+		wp_update_post( $post_update );
 		wp_update_post( $post_update );
 	}
 

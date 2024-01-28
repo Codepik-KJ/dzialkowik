@@ -2,13 +2,13 @@
 
 namespace Dzialkowik\Taxonomies;
 
-class CityTax {
+class RODTax {
 	public string $taxonomy_slug;
 	public string $taxonomy_name;
 
 	public function __construct() {
-		$this->taxonomy_slug = 'city';
-		$this->taxonomy_name = 'Miasta';
+		$this->taxonomy_slug = 'rod_tax';
+		$this->taxonomy_name = 'ROD';
 	}
 
 	public function register_custom_taxonomy() {
@@ -17,15 +17,17 @@ class CityTax {
 			'public'       => true,
 			'hierarchical' => true,
 			'show_in_rest' => false,
-			'rewrite'      => array(
-				'slug'       => 'miasto',
-				'with_front' => true,
-			),
-			'meta_box_cb'  => false,
 		);
 
-		register_taxonomy( $this->taxonomy_slug, 'rod', $args );
+		register_taxonomy( $this->taxonomy_slug, array( 'plots' ), $args );
 
+	}
+	public function get_term_id( $rod_name ) {
+		$get_term = get_term_by( 'name', $rod_name, 'rod_tax' );
+		if ( ! $get_term ) {
+			return false;
+		}
+		return $get_term->term_id;
 	}
 
 }

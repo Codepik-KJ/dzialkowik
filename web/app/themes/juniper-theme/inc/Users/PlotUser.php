@@ -4,9 +4,8 @@ namespace Dzialkowik\Users;
 
 class PlotUser extends UserType {
 
-	public function __construct() {
-		$this->set_dashboard_access();
-	}
+	public $current_user_id;
+
 
 	public function set_user_role_slug() {
 		$this->user_role_slug = 'plot_user';
@@ -20,6 +19,43 @@ class PlotUser extends UserType {
 
 	public function add_user_role() {
 		add_role( $this->user_role_slug, $this->user_role_display_name, get_role( 'subscriber' )->capabilities );
+	}
+
+	public function set_current_user_id() {
+		$this->current_user_id = get_current_user_id();
+	}
+
+	public function is_plot_user() {
+
+		$user = new \WP_User( $this->current_user_id );
+		if ( in_array( $this->user_role_slug, $user->roles, true ) ) {
+			return true;
+		}
+		return false;
+
+	}
+
+	public function is_user_allowed_to_edit_plot( $plot_id ) {
+		if ( ! $this->is_plot_user() ) {
+			return false;
+		}
+		$plot_owner = get_field( 'plot_owner', $plot_id );
+		if ( $this->current_user_id === $plot_owner ) {
+			return true;
+		}
+		return false;
+	}
+
+	public function add_PLOT_caps() {
+		$roles = array( get_role( 'plot_user' ) );
+		foreach ( $roles as $role ) {
+			$role->add_cap( 'edit_plot' );
+			$role->add_cap( 'edit_plots' );
+			$role->add_cap( 'edit_others_plots' );
+			$role->add_cap( 'publish_plots' );
+			$role->add_cap( 'read_plot' );
+			$role->add_cap( 'read_private_plots' );
+		}
 	}
 
 }
