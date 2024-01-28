@@ -3,9 +3,9 @@
  * Timber Juniper Theme
  * https://github.com/osomstudio/JuniperTheme
  *
- * @package  WordPress
- * @subpackage  Timber
- * @since   Timber 0.1
+ * @package    WordPress
+ * @subpackage Timber
+ * @since      Timber 0.1
  */
 
 /**
@@ -20,7 +20,7 @@ use Dzialkowik\OpenWeather\OWConfig;
 $composer_autoload = __DIR__ . '/vendor/autoload.php';
 
 if ( file_exists( $composer_autoload ) ) {
-	require_once $composer_autoload;
+	include_once $composer_autoload;
 	$timber = new Timber\Timber();
 }
 

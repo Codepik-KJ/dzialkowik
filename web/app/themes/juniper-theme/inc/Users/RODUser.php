@@ -66,10 +66,12 @@ class RODUser extends UserType {
 
 		if ( ! current_user_can( 'administrator' ) ) {
 			$wp_query_obj->set( 'author', $current_user->ID );
+			//$user_rod_meta = get_user_meta($current_user->ID, 'user_rod', true);
+
 			//TODO $wp_query_obj->set( 'meta_query', array(
 			//            array(
 			//                'key'     => 'rod',
-			//                'compare' => '=',
+			//                'compare' => 'EXIST',
 			//                'value'   => 'rod_id',
 			//            )
 			//        ))

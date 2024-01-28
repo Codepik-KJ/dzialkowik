@@ -11,11 +11,14 @@ class OWConfig {
 	private $units;
 
 	public function __construct() {
-		$this->api_key = env('OW_API');
+		$this->api_key = env( 'OW_API' );
 		$this->units   = 'metric';
 	}
 
-	public function get_open_weather_data( $lat_lng = array('lat' => 50.89973, 'lng' => 15.72899) ) {
+	public function get_open_weather_data( $lat_lng = array(
+		'lat' => 50.89973,
+		'lng' => 15.72899,
+	) ) {
 		if ( ! $lat_lng ) {
 			return false;
 		}
@@ -24,7 +27,7 @@ class OWConfig {
 	}
 
 	public function check_request_response( $response ) {
-		if( $response->cod !== 200 ) {
+		if ( $response->cod !== 200 ) {
 			$logger = new Logger();
 			$logger->log( 'ERROR: ' . $response->cod . ' ' . $response->message );
 			return false;
@@ -41,12 +44,18 @@ class OWConfig {
 	}
 
 	public function set_cached_weather_data( $term_id ) {
-		set_transient( 'get_open_weather_data_' . $term_id, $this->request_for_weather_data( $term_id ), 18 * HOUR_IN_SECONDS );
-		return $this->get_cached_weather_data( $term_id );
+		$request_for_weather_data = $this->request_for_weather_data( $term_id );
+		set_transient( 'get_open_weather_data_' . $term_id, $request_for_weather_data, 18 * HOUR_IN_SECONDS );
+		return $request_for_weather_data;
 	}
 
 	public function request_for_weather_data( $term_id ) {
-		$city_tax = new CityTax();
-		return $this->get_open_weather_data( $city_tax->get_city_coords( $term_id ) );
+		$city_tax        = new CityTax();
+		$get_city_coords = $city_tax->get_city_coords( $term_id );
+		if ( $get_city_coords ) {
+			return $this->get_open_weather_data( $get_city_coords );
+		}
+		//TODO error log move to get_city_coords method check if it exist, and return false
+		return false;
 	}
 }

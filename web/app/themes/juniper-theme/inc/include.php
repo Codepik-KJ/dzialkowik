@@ -43,7 +43,7 @@ $plot_user->add_PLOT_caps();
 
 add_action( 'pre_get_posts', array( $rod_user, 'show_users_own_content' ) );
 add_filter( 'users_list_table_query_args', array( $rod_user, 'list_only_users_created_by_current_user' ) );
-add_filter( 'user_register', array( $rod_user, 'update_user_meta_on_create') );
+add_filter( 'user_register', array( $rod_user, 'update_user_meta_on_create' ) );
 
 //TODO User is registering, he is adding his plot to the ROD. Render form and test.
 //TODO Add Events and calendar and display in ROD, and Działka View

@@ -8,24 +8,28 @@ class GoogleMapsConfig {
 	private $api_key;
 
 	public function __construct() {
-		$this->api_key = env('GOOGLE_API');
+		$this->api_key = env( 'GOOGLE_API' );
 	}
 
 	public function get_google_maps_coords( $address ) {
 		if ( ! $address ) {
 			return false;
 		}
-		$url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' . $address . '&key=' . $this->api_key;
-		return $this->check_request_response( json_decode( wp_remote_request( $url )['body'] ) );
+
+		$google_maps_request_url            = 'https://maps.googleapis.com/maps/api/geocode/json?address=' . $address . '&key=' . $this->api_key;
+		$google_maps_request        = wp_remote_request( $google_maps_request_url )['body'];
+		//TODO check if is object np. kiedy jest timeout add to logger timeout
+		$google_maps_request_decode = json_decode( $google_maps_request );
+		return $this->check_request_response( $google_maps_request_decode );
 	}
 
-	public function check_request_response( $response ) {
-		if( $response->status !== 'OK' ) {
+	public function check_request_response( $google_maps_response ) {
+		if ( $google_maps_response->status !== 'OK' ) {
 			$logger = new Logger();
-			$logger->log( 'ERROR: ' . $response->status . ' ' . $response->error_message );
+			$logger->log( 'ERROR: ' . $google_maps_response->status . ' ' . $google_maps_response->error_message );
 			return false;
 		}
-		return $response;
+		return $google_maps_response;
 	}
 
 	public function request_for_google_maps_data( $city ) {

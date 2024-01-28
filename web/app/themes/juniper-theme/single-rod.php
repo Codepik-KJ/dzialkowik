@@ -4,9 +4,9 @@
  *
  * Methods for TimberHelper can be found in the /lib sub-directory
  *
- * @package  WordPress
- * @subpackage  Timber
- * @since    Timber 0.1
+ * @package    WordPress
+ * @subpackage Timber
+ * @since      Timber 0.1
  */
 
 use Dzialkowik\GoogleMaps\GoogleMapsConfig;
@@ -30,11 +30,11 @@ $args                    = array(
 );
 $context['plots_in_rod'] = new Timber\PostQuery( $args );
 
-$rod_address                = get_field( 'city' );
-$city_tax                   = new CityTax();
-$get_city_weather           = $city_tax->get_taxonomy_weather_data( $rod_address );
-$context['city_name']       = $rod_address;
-$context['weather']         = '';
+$rod_address          = get_field( 'city' );
+$city_tax             = new CityTax();
+$get_city_weather     = $city_tax->get_taxonomy_weather_data( $rod_address );
+$context['city_name'] = $rod_address;
+$context['weather']   = '';
 if ( $get_city_weather ) {
 	$context['weather'] = $get_city_weather->main;
 }
