@@ -38,23 +38,31 @@ class RODCPT {
 					'delete_post'        => 'delete_rod',
 				),
 				'rewrite'      => array(
-					'slug'       => 'rod/%rod_city_name%',
+					'slug'       => '%city%',
 					'with_front' => false,
 				),
 			)
 		);
-		add_rewrite_tag( '%rod_city_name%', '([^&]+)', 'rod_city_name=' );
-		add_rewrite_rule(
-			'^rod/([^/]*)/([^/]*)/?$',
-			'index.php?post_type=rod&rod_city_name=$matches[1]&name=$matches[2]',
-			'top'
-		);
+		add_rewrite_tag( '%city%', '([^&]+)' );
+		add_rewrite_rule( '^([^/]*)/([^/]*)/?$', 'index.php?post_type=rod&city=$matches[1]&name=$matches[2]', 'top' );
 	}
 
-	public function change_rod_title_as_city_tax( $link, $post_id ) {
-
+	public function change_rod_link_to_match_city_tax( $link, $post_id ) {
 		if ( get_post_type( $post_id ) === 'rod' ) {
-			$link = str_replace( '%rod_city_name%', $this->get_rod_city_slug( $post_id ), $link );
+			$city_slug     = $this->get_rod_city_slug( $post_id );
+			$rod_slug      = get_post_field( 'post_name', $post_id );
+			$link          = str_replace( '%city%', $city_slug, $link );
+			$url_parts     = explode( '/', trim( parse_url( $link, PHP_URL_PATH ), '/' ) );
+			$url_city_slug = $url_parts[0];
+			$url_rod_slug  = $url_parts[1];
+			//TODO obecnie kazdy url działa np http://dzialkowik.local/zgorzelec/zabobrze/ http://dzialkowik.local/zsaddasdasdasec/zabobrze/
+			if ( $url_city_slug !== $city_slug || $url_rod_slug !== $rod_slug ) {
+				global $wp_query;
+				$wp_query->set_404();
+				status_header( 404 );
+				get_template_part( 404 );
+				exit();
+			}
 		}
 		return $link;
 	}

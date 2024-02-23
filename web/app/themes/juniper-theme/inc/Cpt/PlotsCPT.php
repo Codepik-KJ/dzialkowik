@@ -38,18 +38,22 @@ class PlotsCPT {
 					'delete_post'        => 'delete_plot',
 				),
 				'rewrite'      => array(
-					'slug'       => 'rod/%city_name%/%rod_name%',
+					'slug'       => '%city_plot%/%rod_plot%/' . $this->cpt_slug,
 					'with_front' => false,
 				),
 			)
 		);
-		add_rewrite_tag( '%city_name%', '([^&]+)', 'city_name=' );
-		add_rewrite_tag( '%rod_name%', '([^&]+)', 'rod_name=' );
-		add_rewrite_rule(
-			'^rod/([^/]*)/([^/]*)/([^/]*)/?$',
-			'index.php?post_type=plots&city_name=$matches[1]&rod_name=$matches[2]&name=$matches[3]',
-			'top'
-		);
+		add_rewrite_tag( '%city_plot%', '([^&]+)' );
+		add_rewrite_tag( '%rod_plot%', '([^&]+)' );
+		add_rewrite_rule( '^([^/]*)/([^/]*)/([^/]*)/?$', 'index.php?post_type=plots&city_plot=$matches[1]&rod_plot=$matches[2]&name=$matches[3]', 'top' );
+		//add_rewrite_rule( '^([^/]*)/?$', 'index.php?city=$matches[1]', 'top' );
+		//      add_rewrite_tag( '%city_name%', '([^&]+)', 'city_name=' );
+		//      add_rewrite_tag( '%rod_name%', '([^&]+)', 'rod_name=' );
+		//      add_rewrite_rule(
+		//          '^rod/([^/]*)/([^/]*)/([^/]*)/?$',
+		//          'index.php?post_type=plots&city_name=$matches[1]&rod_name=$matches[2]&name=$matches[3]',
+		//          'top'
+		//      );
 	}
 
 	public function is_plots_cpt( $post_id ) {
@@ -81,14 +85,17 @@ class PlotsCPT {
 		wp_update_post( $post_update );
 	}
 
-	public function post_type_as_link( $link, $post_id ) {
-		$rod = get_field( 'rod', $post_id );
-		if ( get_post_type( $post_id ) === 'plots' && $rod ) {
-			$dzialkowik_rod_cpt = new RODCPT();
-			$city               = $dzialkowik_rod_cpt->get_rod_city_slug( $rod );
-			$rod_title          = strtolower( get_field( 'rod_title', $rod ) );
-			$link               = str_replace( '%rod_name%', $rod_title, $link );
-			$link               = str_replace( '%city_name%', $city, $link );
+	public function change_link_hierarchy_for_single_plot( $link, $post_id ) {
+		if ( get_post_type( $post_id ) === 'plots' ) {
+			$rod = get_field( 'rod', $post_id );
+			if ( $rod ) {
+				$dzialkowik_rod_cpt = new RODCPT();
+				$city               = $dzialkowik_rod_cpt->get_rod_city_slug( $rod );
+				$rod_title          = strtolower( get_field( 'rod_title', $rod ) );
+				$link               = str_replace( '%rod_plot%', $rod_title, $link );
+				$link               = str_replace( '%city_plot%', $city, $link );
+				$link               = str_replace( '/plots/', '/', $link );
+			}
 		}
 		return $link;
 	}

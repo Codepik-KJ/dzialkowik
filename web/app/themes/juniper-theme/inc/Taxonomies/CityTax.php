@@ -21,15 +21,15 @@ class CityTax {
 			'public'       => true,
 			'hierarchical' => true,
 			'show_in_rest' => false,
-			'rewrite'      => array(
-				'slug'       => 'miasto',
-				'with_front' => true,
-			),
 			'meta_box_cb'  => false,
+			'rewrite'      => array(
+				'slug' => '/',
+				'with_front' => false,
+			),
 		);
 
 		register_taxonomy( $this->taxonomy_slug, array( 'rod', 'plots' ), $args );
-
+		add_rewrite_rule('^([^/]*)/?$', 'index.php?city=$matches[1]', 'top');
 	}
 	public function get_term_id( $city ) {
 		$get_term = get_term_by( 'name', $city, 'city' );
@@ -73,6 +73,14 @@ class CityTax {
 		$term_id   = $this->get_term_id( $city );
 		$ow_config = new OWConfig();
 		return $ow_config->get_cached_weather_data( $term_id );
+	}
+
+	public function change_term_link( $url, $term, $taxonomy ) {
+		if ( $taxonomy !== 'city' ) {
+			return $url;
+		}
+		$url = str_replace( '/city/', '/', $url );
+		return $url;
 	}
 
 }

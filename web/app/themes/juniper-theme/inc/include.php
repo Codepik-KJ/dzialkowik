@@ -32,8 +32,9 @@ add_action( 'init', array( $city_taxonomy, 'register_custom_taxonomy' ) );
 add_action( 'init', array( $rod_taxonomy, 'register_custom_taxonomy' ) );
 
 add_action( 'acf/save_post', array( $dzialkowik_plots_cpt, 'update_plot_data' ) );
-add_filter( 'post_type_link', array( $dzialkowik_rod_cpt, 'change_rod_title_as_city_tax' ), 10, 2 );
-add_filter( 'post_type_link', array( $dzialkowik_plots_cpt, 'post_type_as_link' ), 10, 2 );
+add_filter( 'post_type_link', array( $dzialkowik_rod_cpt, 'change_rod_link_to_match_city_tax' ), 10, 2 );
+add_filter( 'post_type_link', array( $dzialkowik_plots_cpt, 'change_link_hierarchy_for_single_plot' ), 10, 2 );
+add_filter( 'term_link', array( $city_taxonomy, 'change_term_link' ), 10, 3 );
 add_action( 'save_post', array( $dzialkowik_rod_cpt, 'set_rod_city_tax' ) );
 add_action( 'pre_user_query', array( $rod_user, 'hide_other_roles' ) );
 add_filter( 'editable_roles', array( $rod_user, 'prevent_to_set_specific_role' ) );
