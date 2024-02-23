@@ -1,5 +1,6 @@
 <?php
 
+use Dzialkowik\Admin\RodAdmin;
 use Dzialkowik\Cpt\EventsCPT;
 use Dzialkowik\Cpt\PlotsCPT;
 use Dzialkowik\Cpt\RODCPT;
@@ -21,6 +22,7 @@ $dzialkowik_user      = new UserConfig();
 $city_taxonomy        = new CityTax();
 $rod_taxonomy         = new RODTax();
 $plot_user            = new PlotUser();
+$rod_admin            = new RodAdmin();
 $plot_user->set_dashboard_access();
 $plot_user->set_current_user_id();
 
@@ -41,13 +43,15 @@ $dzialkowik_user->register_user_role( $rod_user );
 $rod_user->add_RODCPT_caps();
 $plot_user->add_PLOT_caps();
 
-add_action( 'pre_get_posts', array( $rod_user, 'show_users_own_content' ) );
+add_action( 'pre_get_posts', array( $rod_user, 'show_user_specific_content' ) );
 add_filter( 'users_list_table_query_args', array( $rod_user, 'list_only_users_created_by_current_user' ) );
 add_filter( 'user_register', array( $rod_user, 'update_user_meta_on_create' ) );
 
 //TODO User is registering, he is adding his plot to the ROD. Render form and test.
 //TODO Add Events and calendar and display in ROD, and Działka View
-//TODO Add API Weather
 //TODO Add Plot User login page
 //TODO Add Działka View
 //TODO Add ROD View
+
+//TODO Zmienić strukturę linków na /miasto/rod/dzialka
+

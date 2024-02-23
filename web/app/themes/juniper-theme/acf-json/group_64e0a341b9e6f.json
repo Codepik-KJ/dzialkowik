@@ -47,27 +47,6 @@
             "step": "",
             "prepend": "",
             "append": ""
-        },
-        {
-            "key": "field_64e0a3864864e",
-            "label": "Właściciel",
-            "name": "plot_owner",
-            "aria-label": "",
-            "type": "user",
-            "instructions": "",
-            "required": 1,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "role": [
-                "plot_user"
-            ],
-            "return_format": "id",
-            "multiple": 0,
-            "allow_null": 0
         }
     ],
     "location": [
@@ -88,5 +67,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1695836346
+    "modified": 1708616896
 }

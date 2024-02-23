@@ -3,6 +3,7 @@
 namespace Dzialkowik\Taxonomies;
 
 use Dzialkowik\GoogleMaps\GoogleMapsConfig;
+use Dzialkowik\Logger\Logger;
 use Dzialkowik\OpenWeather\OWConfig;
 
 class CityTax {
@@ -45,8 +46,8 @@ class CityTax {
 		$term_lat_lng = get_term_meta( $term_id, 'lat_lng', true );
 
 		if ( ! $term_lat_lng ) {
-			$google_maps_config   = new GoogleMapsConfig();
-			$term_lat_lng = $google_maps_config->request_for_google_maps_data( $city );
+			$google_maps_config = new GoogleMapsConfig();
+			$term_lat_lng       = $google_maps_config->request_for_google_maps_data( $city );
 			if ( ! $term_lat_lng ) {
 				return;
 			}
@@ -58,6 +59,8 @@ class CityTax {
 	public function get_city_coords( $term_id ) {
 		$exploded_string = explode( ',', get_term_meta( $term_id, 'lat_lng', true ) );
 		if ( ! $exploded_string ) {
+			$logger = new Logger();
+			$logger->log( 'ERROR: City coords are invalid. In get_city_coords( $term_id) In web/app/themes/juniper-theme/inc/Taxonomies/CityTax.php on line:' . __LINE__ );
 			return false;
 		}
 		return array(

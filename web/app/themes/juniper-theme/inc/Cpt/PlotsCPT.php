@@ -2,6 +2,9 @@
 
 namespace Dzialkowik\Cpt;
 
+use Dzialkowik\Admin\RodAdmin;
+use Dzialkowik\Users\RODUser;
+
 class PlotsCPT {
 	public string $cpt_slug;
 	public string $cpt_name;
@@ -56,14 +59,16 @@ class PlotsCPT {
 		}
 		return true;
 	}
-
+	/*
+	 * On acf/save_post hook, update plot title and name with rod and city taxonomies
+	 */
 	public function update_plot_data( $post_id ) {
 		if ( ! $this->is_plots_cpt( $post_id ) ) {
 			return;
 		}
 		$rod         = get_field( 'rod', $post_id );
-		$rod_title   = get_field( 'rod_title', $rod->ID );
-		$rod_term    = get_field( 'city', $rod->ID );
+		$rod_title   = get_field( 'rod_title', $rod );
+		$rod_term    = get_field( 'city', $rod );
 		$plot_number = get_field( 'numer', $post_id );
 		$post_update = array(
 			'ID'         => $post_id,
@@ -80,13 +85,11 @@ class PlotsCPT {
 		$rod = get_field( 'rod', $post_id );
 		if ( get_post_type( $post_id ) === 'plots' && $rod ) {
 			$dzialkowik_rod_cpt = new RODCPT();
-			$city               = $dzialkowik_rod_cpt->get_rod_city_slug( $rod->ID );
-			$rod_title          = strtolower( get_field( 'rod_title', $rod->ID ) );
+			$city               = $dzialkowik_rod_cpt->get_rod_city_slug( $rod );
+			$rod_title          = strtolower( get_field( 'rod_title', $rod ) );
 			$link               = str_replace( '%rod_name%', $rod_title, $link );
 			$link               = str_replace( '%city_name%', $city, $link );
 		}
 		return $link;
 	}
-
-
 }

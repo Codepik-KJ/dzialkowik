@@ -4,7 +4,7 @@ namespace Dzialkowik\Users;
 
 class PlotUser extends UserType {
 
-	public $current_user_id;
+	public int $current_user_id;
 
 
 	public function set_user_role_slug() {
@@ -55,6 +55,21 @@ class PlotUser extends UserType {
 			$role->add_cap( 'publish_plots' );
 			$role->add_cap( 'read_plot' );
 			$role->add_cap( 'read_private_plots' );
+		}
+	}
+
+	public function show_user_specific_content( $wp_query_obj ) {
+		if ( ! is_admin() ) {
+			return;
+		}
+
+		global $current_user;
+
+		if ( ! is_a( $current_user, 'WP_User' ) ) {
+			return;
+		}
+		if ( $this->is_plot_user() ) {
+			$wp_query_obj->set( 'author', $this->current_user_id );
 		}
 	}
 

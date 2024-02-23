@@ -2,7 +2,9 @@
 
 namespace Dzialkowik\Cpt;
 
+use Dzialkowik\Admin\RodAdmin;
 use Dzialkowik\Taxonomies\CityTax;
+use Dzialkowik\Users\RODUser;
 
 class RODCPT {
 	public string $cpt_slug;
