@@ -5,7 +5,7 @@ namespace Dzialkowik\Cpt;
 use Dzialkowik\Admin\RodAdmin;
 use Dzialkowik\Users\RODUser;
 
-class PlotsCPT {
+class PlotsCPT extends ConfigCPT {
 	public string $cpt_slug;
 	public string $cpt_name;
 
@@ -38,22 +38,14 @@ class PlotsCPT {
 					'delete_post'        => 'delete_plot',
 				),
 				'rewrite'      => array(
-					'slug'       => '%city_plot%/%rod_plot%/' . $this->cpt_slug,
+					'slug'       => 'rod/%city_plot%/%rod_plot%/' . $this->cpt_slug,
 					'with_front' => false,
 				),
 			)
 		);
 		add_rewrite_tag( '%city_plot%', '([^&]+)' );
 		add_rewrite_tag( '%rod_plot%', '([^&]+)' );
-		add_rewrite_rule( '^([^/]*)/([^/]*)/([^/]*)/?$', 'index.php?post_type=plots&city_plot=$matches[1]&rod_plot=$matches[2]&name=$matches[3]', 'top' );
-		//add_rewrite_rule( '^([^/]*)/?$', 'index.php?city=$matches[1]', 'top' );
-		//      add_rewrite_tag( '%city_name%', '([^&]+)', 'city_name=' );
-		//      add_rewrite_tag( '%rod_name%', '([^&]+)', 'rod_name=' );
-		//      add_rewrite_rule(
-		//          '^rod/([^/]*)/([^/]*)/([^/]*)/?$',
-		//          'index.php?post_type=plots&city_name=$matches[1]&rod_name=$matches[2]&name=$matches[3]',
-		//          'top'
-		//      );
+		add_rewrite_rule( '^rod/([^/]*)/([^/]*)/([^/]*)/?$', 'index.php?post_type=plots&city_plot=$matches[1]&rod_plot=$matches[2]&name=$matches[3]', 'top' );
 	}
 
 	public function is_plots_cpt( $post_id ) {
@@ -85,7 +77,8 @@ class PlotsCPT {
 		wp_update_post( $post_update );
 	}
 
-	public function change_link_hierarchy_for_single_plot( $link, $post_id ) {
+	public function change_link_hierarchy_for_single_plot( $link, $post ) {
+		$post_id = $post->ID;
 		if ( get_post_type( $post_id ) === 'plots' ) {
 			$rod = get_field( 'rod', $post_id );
 			if ( $rod ) {
@@ -95,8 +88,11 @@ class PlotsCPT {
 				$link               = str_replace( '%rod_plot%', $rod_title, $link );
 				$link               = str_replace( '%city_plot%', $city, $link );
 				$link               = str_replace( '/plots/', '/', $link );
+				$this->check_post_link( $city, $rod_title, $post_id );
 			}
 		}
 		return $link;
 	}
+
+
 }

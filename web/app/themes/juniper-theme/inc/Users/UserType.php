@@ -9,6 +9,7 @@ abstract class UserType extends UserConfig {
 	abstract public function set_dashboard_access();
 	abstract public function add_user_role();
 	abstract public function show_user_specific_content( $wp_query_obj );
+	abstract public function is_user_assigned_to_rod( $rod_id, $user_id );
 
 	public function setup_user_role() {
 		$this->set_user_role_slug();

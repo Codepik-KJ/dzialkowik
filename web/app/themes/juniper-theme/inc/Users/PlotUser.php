@@ -73,4 +73,18 @@ class PlotUser extends UserType {
 		}
 	}
 
+	public function is_user_assigned_to_rod( $rod_id, $user_id ) {
+		$get_user_plots_assigned = get_user_meta( $user_id, 'plot_assigned', true );
+		if ( empty( $get_user_plots_assigned ) ) {
+			return false;
+		}
+		foreach ( $get_user_plots_assigned as $plot ) {
+			$plot_rod = get_field( 'rod', $plot );
+			if ( $plot_rod === $rod_id ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 }

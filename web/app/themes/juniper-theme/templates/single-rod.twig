@@ -8,7 +8,9 @@
     <h2>Wykaz działek:</h2>
     <ul>
         {% for single_plot in plots_in_rod %}
-            <h2><a href="{{ single_plot.link }}">{{ single_plot.post_title }}</a></h2>
+            <h2><a href="{{ fn('get_permalink', single_plot.ID ) }}">{{ single_plot.post_title }}</a></h2>
         {% endfor %}
     </ul>
+    <h2>Harmonogram:</h2>
+    {% include 'partial/events-list.twig' with { 'events' : events } %}
 {% endblock %}

@@ -9,14 +9,16 @@
  * @since      Timber 0.1
  */
 
+use Dzialkowik\Cpt\EventsCPT;
 use Dzialkowik\GoogleMaps\GoogleMapsConfig;
 use Dzialkowik\Taxonomies\CityTax;
 
 $context         = Timber::context();
 $timber_post     = Timber::query_post();
 $context['post'] = $timber_post;
+$events_CPT        = new EventsCPT();
+$context['events'] = $events_CPT->query_events( $timber_post->ID );
 
-//TODO query by taxonomy ROD
 $args                    = array(
 	'post_type'      => 'plots',
 	'posts_per_page' => -1,
@@ -28,7 +30,8 @@ $args                    = array(
 		),
 	),
 );
-$context['plots_in_rod'] = new Timber\PostQuery( $args );
+$plots_query             = new WP_Query( $args );
+$context['plots_in_rod'] = $plots_query->get_posts();
 
 $rod_address          = get_field( 'city' );
 $city_tax             = new CityTax();

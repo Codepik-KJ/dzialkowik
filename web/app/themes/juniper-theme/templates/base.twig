@@ -20,6 +20,12 @@
 				</div>
 			{% endblock %}
 		</header>
+		{% block breadcrumbs %}
+			{% if breadcrumbs %}
+				{{ breadcrumbs }}
+			{% endif %}
+		{% endblock %}
+
 
 		<section id="content" role="main" class="content-wrapper">
 			{% if title %}<h1>{{title}}</h1>{% endif %}

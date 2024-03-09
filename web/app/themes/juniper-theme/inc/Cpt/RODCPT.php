@@ -6,7 +6,7 @@ use Dzialkowik\Admin\RodAdmin;
 use Dzialkowik\Taxonomies\CityTax;
 use Dzialkowik\Users\RODUser;
 
-class RODCPT {
+class RODCPT extends ConfigCPT {
 	public string $cpt_slug;
 	public string $cpt_name;
 
@@ -38,31 +38,23 @@ class RODCPT {
 					'delete_post'        => 'delete_rod',
 				),
 				'rewrite'      => array(
-					'slug'       => '%city%',
+					'slug'       => 'rod/%city%',
 					'with_front' => false,
 				),
 			)
 		);
 		add_rewrite_tag( '%city%', '([^&]+)' );
-		add_rewrite_rule( '^([^/]*)/([^/]*)/?$', 'index.php?post_type=rod&city=$matches[1]&name=$matches[2]', 'top' );
+		add_rewrite_rule( '^rod/([^/]*)/([^/]*)/?$', 'index.php?post_type=rod&city=$matches[1]&name=$matches[2]', 'top' );
 	}
 
-	public function change_rod_link_to_match_city_tax( $link, $post_id ) {
+	public function change_rod_link_to_match_city_tax( $link, $post ) {
+		$post_id = $post->ID;
 		if ( get_post_type( $post_id ) === 'rod' ) {
-			$city_slug     = $this->get_rod_city_slug( $post_id );
-			$rod_slug      = get_post_field( 'post_name', $post_id );
-			$link          = str_replace( '%city%', $city_slug, $link );
-			$url_parts     = explode( '/', trim( parse_url( $link, PHP_URL_PATH ), '/' ) );
-			$url_city_slug = $url_parts[0];
-			$url_rod_slug  = $url_parts[1];
-			//TODO obecnie kazdy url działa np http://dzialkowik.local/zgorzelec/zabobrze/ http://dzialkowik.local/zsaddasdasdasec/zabobrze/
-			if ( $url_city_slug !== $city_slug || $url_rod_slug !== $rod_slug ) {
-				global $wp_query;
-				$wp_query->set_404();
-				status_header( 404 );
-				get_template_part( 404 );
-				exit();
-			}
+			$city_slug = $this->get_rod_city_slug( $post_id );
+			$rod_slug  = get_post_field( 'post_name', $post_id );
+			$link      = str_replace( '%city%', $city_slug, $link );
+
+			$this->check_post_link( $city_slug, $rod_slug, $post_id );
 		}
 		return $link;
 	}
@@ -92,6 +84,28 @@ class RODCPT {
 		$city_tax = new CityTax();
 		$city_tax->update_city_coords( $city );
 		wp_set_object_terms( $post_id, array( $city ), 'city' );
+	}
+
+	public function query_rods( $post_id ) {
+		$events       = array(
+			'post_type'      => 'events',
+			'posts_per_page' => -1,
+			'meta_query'     => array(
+				'relation' => 'OR',
+				array(
+					'key'     => 'rod',
+					'value'   => $post_id,
+					'compare' => 'LIKE',
+				),
+				array(
+					'key'     => 'is_global',
+					'value'   => 1,
+					'compare' => '=',
+				),
+			),
+		);
+		$events_query = new \WP_Query( $events );
+		return $events_query->get_posts();
 	}
 
 }

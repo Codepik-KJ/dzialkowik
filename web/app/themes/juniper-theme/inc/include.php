@@ -4,7 +4,10 @@ use Dzialkowik\Admin\RodAdmin;
 use Dzialkowik\Cpt\EventsCPT;
 use Dzialkowik\Cpt\PlotsCPT;
 use Dzialkowik\Cpt\RODCPT;
+use Dzialkowik\Cron\CronScheduler;
+use Dzialkowik\Email\MailEventComing;
 use Dzialkowik\Forms\FormConfig;
+use Dzialkowik\Logger\Logger;
 use Dzialkowik\Taxonomies\CityTax;
 use Dzialkowik\Taxonomies\RODTax;
 use Dzialkowik\Users\PlotUser;
@@ -25,6 +28,9 @@ $plot_user            = new PlotUser();
 $rod_admin            = new RodAdmin();
 $plot_user->set_dashboard_access();
 $plot_user->set_current_user_id();
+$event_cpt                            = new EventsCPT();
+$mail_event_coming                    = new MailEventComing();
+$maybe_send_event_email_cron_schedule = new CronScheduler( 'maybe_send_event_email' );
 
 add_action( 'init', array( $dzialkowik_plots_cpt, 'register_custom_cpt' ) );
 add_action( 'init', array( $dzialkowik_rod_cpt, 'register_custom_cpt' ) );
@@ -48,11 +54,29 @@ add_action( 'pre_get_posts', array( $rod_user, 'show_user_specific_content' ) );
 add_filter( 'users_list_table_query_args', array( $rod_user, 'list_only_users_created_by_current_user' ) );
 add_filter( 'user_register', array( $rod_user, 'update_user_meta_on_create' ) );
 
+$event_cpt->register_custom_cpt();
+add_filter( 'acf/init', array( $event_cpt, 'events_admin_fields' ) );
+$maybe_send_event_email_cron_schedule->schedule_event();
+
+add_action( 'maybe_send_event_email', array( $mail_event_coming, 'send_event_email' ) );
+add_action(
+	'wp_mail_failed',
+	function ( $error ) {
+		if ( ! empty( $error->errors ) ) {
+			$message = implode( ', ', $error->errors['wp_mail_failed'] );
+		} else {
+			$message = 'Email send failed';
+		}
+		$logger = new Logger();
+		$logger->log( $message );
+	}
+);
+
+//add_action('maybe_send_event_email', array($event_cpt, 'send_event_email'));
 //TODO User is registering, he is adding his plot to the ROD. Render form and test.
 //TODO Add Events and calendar and display in ROD, and Działka View
 //TODO Add Plot User login page
-//TODO Add Działka View
-//TODO Add ROD View
 
-//TODO Zmienić strukturę linków na /miasto/rod/dzialka
+//TODO Ogarnąć single-rod.php i single-plot.php, wrzucić to do classy
+//TODO Mailing system
 

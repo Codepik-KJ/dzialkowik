@@ -100,6 +100,14 @@ class RODUser extends UserType {
 			$role->add_cap( 'create_users' );
 			$role->add_cap( 'promote_users' );
 			$role->add_cap( 'edit_users' );
+
+			$role->add_cap( 'edit_event' );
+			$role->add_cap( 'edit_events' );
+			$role->add_cap( 'edit_others_events' );
+			$role->add_cap( 'publish_events' );
+			$role->add_cap( 'read_event' );
+			$role->add_cap( 'read_private_events' );
+			$role->add_cap( 'delete_event' );
 		}
 	}
 	public function list_only_users_created_by_current_user( $args = array() ) {
@@ -122,6 +130,19 @@ class RODUser extends UserType {
 			return;
 		}
 		update_user_meta( $user_id, 'created_by_user_id', $current_user->ID );
+	}
+
+	public function is_user_assigned_to_rod( $rod_id, $user_id ) {
+
+		$rod_assigned = get_user_meta( $user_id, 'rod_assigned', true );
+		if ( empty( $rod_assigned ) ) {
+			return false;
+		}
+
+		if ( in_array( $rod_id, $rod_assigned) ) {
+			return true;
+		}
+		return false;
 	}
 
 }

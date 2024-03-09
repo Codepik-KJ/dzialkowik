@@ -23,13 +23,13 @@ class CityTax {
 			'show_in_rest' => false,
 			'meta_box_cb'  => false,
 			'rewrite'      => array(
-				'slug' => '/',
+				'slug'       => 'rod/' . $this->taxonomy_slug,
 				'with_front' => false,
 			),
 		);
 
 		register_taxonomy( $this->taxonomy_slug, array( 'rod', 'plots' ), $args );
-		add_rewrite_rule('^([^/]*)/?$', 'index.php?city=$matches[1]', 'top');
+		add_rewrite_rule( '^rod/([^/]*)/?$', 'index.php?city=$matches[1]', 'top' );
 	}
 	public function get_term_id( $city ) {
 		$get_term = get_term_by( 'name', $city, 'city' );
@@ -58,7 +58,7 @@ class CityTax {
 
 	public function get_city_coords( $term_id ) {
 		$exploded_string = explode( ',', get_term_meta( $term_id, 'lat_lng', true ) );
-		if ( ! $exploded_string ) {
+		if ( empty( $exploded_string[0] ) || empty( $exploded_string[1] ) ) {
 			$logger = new Logger();
 			$logger->log( 'ERROR: City coords are invalid. In get_city_coords( $term_id) In web/app/themes/juniper-theme/inc/Taxonomies/CityTax.php on line:' . __LINE__ );
 			return false;
@@ -76,11 +76,10 @@ class CityTax {
 	}
 
 	public function change_term_link( $url, $term, $taxonomy ) {
-		if ( $taxonomy !== 'city' ) {
+		if ( 'city' !== $taxonomy ) {
 			return $url;
 		}
-		$url = str_replace( '/city/', '/', $url );
-		return $url;
+		return str_replace( '/city/', '/', $url );
 	}
 
 }
