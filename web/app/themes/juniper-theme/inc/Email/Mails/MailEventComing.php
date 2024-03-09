@@ -3,6 +3,7 @@
 namespace Dzialkowik\Email;
 
 use Dzialkowik\Cpt\EventsCPT;
+use Dzialkowik\Logger\Logger;
 use Dzialkowik\Users\UserConfig;
 use Dzialkowik\Users\UserType;
 
@@ -43,6 +44,8 @@ class MailEventComing extends EmailConfig {
 
 	public function send_event_email() {
 		$events = $this->event_cpt->get_all_available_events();
+		$logger = new Logger();
+		$logger->log( 'Sending event email' );
 		if ( empty( $events ) ) {
 			return;
 		}

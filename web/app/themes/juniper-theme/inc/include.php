@@ -28,9 +28,8 @@ $plot_user            = new PlotUser();
 $rod_admin            = new RodAdmin();
 $plot_user->set_dashboard_access();
 $plot_user->set_current_user_id();
-$event_cpt                            = new EventsCPT();
-$mail_event_coming                    = new MailEventComing();
-$maybe_send_event_email_cron_schedule = new CronScheduler( 'maybe_send_event_email' );
+$event_cpt = new EventsCPT();
+
 
 add_action( 'init', array( $dzialkowik_plots_cpt, 'register_custom_cpt' ) );
 add_action( 'init', array( $dzialkowik_rod_cpt, 'register_custom_cpt' ) );
@@ -56,9 +55,11 @@ add_filter( 'user_register', array( $rod_user, 'update_user_meta_on_create' ) );
 
 $event_cpt->register_custom_cpt();
 add_filter( 'acf/init', array( $event_cpt, 'events_admin_fields' ) );
-$maybe_send_event_email_cron_schedule->schedule_event();
-
+$mail_event_coming                    = new MailEventComing();
+$maybe_send_event_email_cron_schedule = new CronScheduler( 'maybe_send_event_email' );
 add_action( 'maybe_send_event_email', array( $mail_event_coming, 'send_event_email' ) );
+add_action( 'init', array( $maybe_send_event_email_cron_schedule, 'schedule_event' ) );
+
 add_action(
 	'wp_mail_failed',
 	function ( $error ) {
@@ -71,12 +72,4 @@ add_action(
 		$logger->log( $message );
 	}
 );
-
-//add_action('maybe_send_event_email', array($event_cpt, 'send_event_email'));
-//TODO User is registering, he is adding his plot to the ROD. Render form and test.
-//TODO Add Events and calendar and display in ROD, and Działka View
-//TODO Add Plot User login page
-
-//TODO Ogarnąć single-rod.php i single-plot.php, wrzucić to do classy
-//TODO Mailing system
 
