@@ -2,9 +2,9 @@
 {% block content %}
     <h1>{{ current_post.title }}</h1>
     <p>{{ current_post.post_content }}</p>
-    {% for rod in all_rods %}
+    {% for city in rod_cities %}
         <article>
-            <h2><a href="{{ rod.link }}">{{ rod.title }}</a></h2>
+            <h2><a href="{{ city.link }}">{{ city.name }}</a></h2>
         </article>
     {% endfor %}
 {% endblock %}

@@ -22,7 +22,13 @@ class OWConfig {
 		if ( ! $lat_lng ) {
 			return false;
 		}
-		$url = 'https://api.openweathermap.org/data/2.5/weather?lat=' . $lat_lng['lat'] . '&lon=' . $lat_lng['lng'] . '&exclude=alerts&units=' . $this->units . '&appid=' . $this->api_key;
+		$url      = 'https://api.openweathermap.org/data/2.5/weather?lat=' . $lat_lng['lat'] . '&lon=' . $lat_lng['lng'] . '&exclude=alerts&units=' . $this->units . '&appid=' . $this->api_key;
+		$response = json_decode( wp_remote_request( $url )['body'] );
+		if ( ! is_object( $response ) ) {
+			$logger = new Logger();
+			$logger->log( 'ERROR: Request response is not an object. In web/app/themes/juniper-theme/inc/OpenWeather/OWConfig.php:' . __LINE__ );
+			return false;
+		}
 		return $this->check_request_response( json_decode( wp_remote_request( $url )['body'] ) );
 	}
 
@@ -55,7 +61,6 @@ class OWConfig {
 		if ( $get_city_coords ) {
 			return $this->get_open_weather_data( $get_city_coords );
 		}
-		//TODO error log move to get_city_coords method check if it exist, and return false
 		return false;
 	}
 }

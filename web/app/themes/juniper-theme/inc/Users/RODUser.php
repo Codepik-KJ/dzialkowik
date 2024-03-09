@@ -2,10 +2,18 @@
 
 namespace Dzialkowik\Users;
 
+use Dzialkowik\Admin\RodAdmin;
+
 class RODUser extends UserType {
+
+	public array $roles;
 
 	public function __construct() {
 		$this->set_dashboard_access();
+		$this->roles = array(
+			get_role( 'administrator' ),
+			get_role( 'rod_user' ),
+		);
 	}
 
 	public function set_user_role_slug() {
@@ -53,7 +61,7 @@ class RODUser extends UserType {
 		return $all_roles;
 	}
 
-	public function show_users_own_content( $wp_query_obj ) {
+	public function show_user_specific_content( $wp_query_obj ) {
 		if ( ! is_admin() ) {
 			return;
 		}
@@ -64,27 +72,16 @@ class RODUser extends UserType {
 			return;
 		}
 
-		if ( ! current_user_can( 'administrator' ) ) {
-			$wp_query_obj->set( 'author', $current_user->ID );
-			//$user_rod_meta = get_user_meta($current_user->ID, 'user_rod', true);
-
-			//TODO $wp_query_obj->set( 'meta_query', array(
-			//            array(
-			//                'key'     => 'rod',
-			//                'compare' => 'EXIST',
-			//                'value'   => 'rod_id',
-			//            )
-			//        ))
+		if ( current_user_can( 'rod_user' ) ) {
+			$rod_admin = new RodAdmin();
+			$rod_admin->pre_get_posts_for_rod( $wp_query_obj, $current_user );
 		}
 
 	}
 
 
 	public function add_RODCPT_caps() {
-		//TODO te role lepiej wyciągnąć do jakiegoś configa (typu array w obiekcie)
-
-		$roles = array( get_role( 'administrator' ), get_role( 'rod_user' ) );
-		foreach ( $roles as $role ) {
+		foreach ( $this->roles as $role ) {
 			$role->add_cap( 'edit_rod' );
 			$role->add_cap( 'edit_rods' );
 			$role->add_cap( 'edit_others_rods' );
@@ -102,10 +99,18 @@ class RODUser extends UserType {
 			$role->add_cap( 'list_users' );
 			$role->add_cap( 'create_users' );
 			$role->add_cap( 'promote_users' );
+			$role->add_cap( 'edit_users' );
+
+			$role->add_cap( 'edit_event' );
+			$role->add_cap( 'edit_events' );
+			$role->add_cap( 'edit_others_events' );
+			$role->add_cap( 'publish_events' );
+			$role->add_cap( 'read_event' );
+			$role->add_cap( 'read_private_events' );
+			$role->add_cap( 'delete_event' );
 		}
 	}
-
-	public function list_only_users_created_by_current_user( $args ) {
+	public function list_only_users_created_by_current_user( $args = array() ) {
 		global $current_user;
 		if ( ! is_a( $current_user, 'WP_User' ) ) {
 			return $args;
@@ -113,12 +118,10 @@ class RODUser extends UserType {
 		if ( current_user_can( 'administrator' ) ) {
 			return $args;
 		}
+		$args['meta_key']   = 'created_by_user_id';
+		$args['meta_value'] = $current_user->ID;
 
-		return array(
-			'meta_key'   => 'created_by_user_id',
-			'meta_value' => $current_user->ID,
-		);
-		//TODO array( 'meta_key' => 'rod_id', 'meta_value' => rod_id );
+		return $args;
 	}
 
 	public function update_user_meta_on_create( $user_id ) {
@@ -127,6 +130,19 @@ class RODUser extends UserType {
 			return;
 		}
 		update_user_meta( $user_id, 'created_by_user_id', $current_user->ID );
+	}
+
+	public function is_user_assigned_to_rod( $rod_id, $user_id ) {
+
+		$rod_assigned = get_user_meta( $user_id, 'rod_assigned', true );
+		if ( empty( $rod_assigned ) ) {
+			return false;
+		}
+
+		if ( in_array( $rod_id, $rod_assigned ) ) {
+			return true;
+		}
+		return false;
 	}
 
 }

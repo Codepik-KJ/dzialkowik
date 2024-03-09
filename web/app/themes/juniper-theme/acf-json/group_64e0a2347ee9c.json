@@ -61,27 +61,6 @@
             "placeholder": "",
             "prepend": "",
             "append": ""
-        },
-        {
-            "key": "field_64e0a2713d797",
-            "label": "Osoba zarządzająca",
-            "name": "owner",
-            "aria-label": "",
-            "type": "user",
-            "instructions": "",
-            "required": 1,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "role": [
-                "rod_user"
-            ],
-            "return_format": "array",
-            "multiple": 0,
-            "allow_null": 0
         }
     ],
     "location": [
@@ -102,5 +81,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1692443435
+    "modified": 1708616915
 }

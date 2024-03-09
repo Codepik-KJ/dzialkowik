@@ -1,0 +1,11 @@
+<ul>
+    {% for event in events %}
+       <li>
+           <div class="events-list">
+               <p>{{ event.date }}</p>
+               <h3>{{ event.title }}</h3>
+
+           </div>
+       </li>
+    {% endfor %}
+</ul>

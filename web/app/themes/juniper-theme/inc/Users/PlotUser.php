@@ -4,7 +4,7 @@ namespace Dzialkowik\Users;
 
 class PlotUser extends UserType {
 
-	public $current_user_id;
+	public int $current_user_id;
 
 
 	public function set_user_role_slug() {
@@ -56,6 +56,35 @@ class PlotUser extends UserType {
 			$role->add_cap( 'read_plot' );
 			$role->add_cap( 'read_private_plots' );
 		}
+	}
+
+	public function show_user_specific_content( $wp_query_obj ) {
+		if ( ! is_admin() ) {
+			return;
+		}
+
+		global $current_user;
+
+		if ( ! is_a( $current_user, 'WP_User' ) ) {
+			return;
+		}
+		if ( $this->is_plot_user() ) {
+			$wp_query_obj->set( 'author', $this->current_user_id );
+		}
+	}
+
+	public function is_user_assigned_to_rod( $rod_id, $user_id ) {
+		$get_user_plots_assigned = get_user_meta( $user_id, 'plot_assigned', true );
+		if ( empty( $get_user_plots_assigned ) ) {
+			return false;
+		}
+		foreach ( $get_user_plots_assigned as $plot ) {
+			$plot_rod = get_field( 'rod', $plot );
+			if ( $plot_rod === $rod_id ) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

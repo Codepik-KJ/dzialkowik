@@ -1,0 +1,9 @@
+{% extends "base.twig" %}
+{% block content %}
+    <h1>{{ term.title }}</h1>
+    {% for rod in city_rods %}
+        <article>
+            <h2><a href="{{ rod.link }}">{{ rod.name }}</a></h2>
+        </article>
+    {% endfor %}
+{% endblock %}

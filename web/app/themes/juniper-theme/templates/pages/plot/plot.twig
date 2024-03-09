@@ -7,4 +7,7 @@
     <h1>PLOT {{ post.title }}</h1>
     <h2>OPIS:</h2>
     <p>{{ plot_description }}</p>
+
+    <h2>Harmonogram:</h2>
+    {% include 'partial/events-list.twig' with { 'events' : events } %}
 {% endblock %}
