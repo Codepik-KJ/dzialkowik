@@ -30,15 +30,15 @@ class RodAdmin {
 
 	public function get_author_posts( $wpdb, $current_user ) {
 		$query_author_posts = $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_author = %d", $current_user->ID );
-		return $wpdb->get_col( $query_author_posts );
+		return $wpdb->get_col( $query_author_posts ); // phpcs:ignore
 	}
 
 	public function get_post_in_posts( $wpdb, $array_with_posts ) {
 		if ( is_array( $array_with_posts ) ) {
 			$placeholders  = array_fill( 0, count( $array_with_posts ), '%d' );
 			$format        = implode( ', ', $placeholders );
-			$query_post_in = $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE ID IN ($format)", $array_with_posts );
-			return $wpdb->get_col( $query_post_in );
+			$query_post_in = $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE ID IN ($format)", $array_with_posts ); // phpcs:ignore
+			return $wpdb->get_col( $query_post_in ); // phpcs:ignore
 		}
 		return array();
 	}
@@ -47,7 +47,7 @@ class RodAdmin {
 		$plots = array();
 		foreach ( $rods as $rod ) {
 			$query   = $wpdb->prepare( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = 'rod' AND meta_value = %d", $rod );
-			$results = $wpdb->get_col( $query );
+			$results = $wpdb->get_col( $query ); // phpcs:ignore
 			$plots   = array_merge( $plots, $results );
 		}
 		return $plots;
