@@ -9,7 +9,11 @@ class ConfigCPT {
 			return;
 		}
 		if ( ! is_admin() ) {
-			$url_parts     = explode( '/', trim( parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ), '/' ) );
+
+			$url_parts = explode( '/', trim( parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ), '/' ) );
+			if ( empty( $url_parts[1] ) || empty( $url_parts[2] ) ) {
+				return;
+			}
 			$url_city_slug = $url_parts[1];
 			$url_rod_slug  = $url_parts[2];
 			if ( $url_city_slug !== $city || $url_rod_slug !== $rod_title ) {
