@@ -17,7 +17,7 @@ class CronScheduler {
 	public function schedule_event() {
 		$hook_name = $this->get_event();
 		$timestamp = wp_next_scheduled( $hook_name );
-		if ( $timestamp === false ) {
+		if ( false === $timestamp ) {
 			wp_schedule_event( time(), 'hourly', $hook_name );
 		}
 	}
@@ -25,7 +25,7 @@ class CronScheduler {
 	public function unschedule_event() {
 		$hook_name = $this->get_event();
 		$timestamp = wp_next_scheduled( $hook_name );
-		if ( $timestamp !== false ) {
+		if ( false !== $timestamp ) {
 			wp_unschedule_event( $timestamp, $hook_name );
 		}
 	}

@@ -20,9 +20,9 @@ $context                 = Timber::context();
 $context['current_post'] = new Timber\Post();
 $current_post_id         = get_the_ID();
 
-$events_CPT        = new EventsCPT();
-$current_post_rod = get_field( 'rod' );
-$context['events'] = $events_CPT->query_events( $current_post_rod );
+$events_cpt        = new EventsCPT();
+$current_post_rod  = get_field( 'rod' );
+$context['events'] = $events_cpt->query_events( $current_post_rod );
 
 if ( isset( $_GET['edit'] ) && $plot_user->is_plot_user() && $plot_user->is_user_allowed_to_edit_plot( $current_post_id ) ) {
 

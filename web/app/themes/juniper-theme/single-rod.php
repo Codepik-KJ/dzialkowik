@@ -10,14 +10,13 @@
  */
 
 use Dzialkowik\Cpt\EventsCPT;
-use Dzialkowik\GoogleMaps\GoogleMapsConfig;
 use Dzialkowik\Taxonomies\CityTax;
 
-$context         = Timber::context();
-$timber_post     = Timber::query_post();
-$context['post'] = $timber_post;
-$events_CPT        = new EventsCPT();
-$context['events'] = $events_CPT->query_events( $timber_post->ID );
+$context           = Timber::context();
+$timber_post       = Timber::query_post();
+$context['post']   = $timber_post;
+$events_cpt        = new EventsCPT();
+$context['events'] = $events_cpt->query_events( $timber_post->ID );
 
 $args                    = array(
 	'post_type'      => 'plots',

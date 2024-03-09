@@ -139,7 +139,7 @@ class RODUser extends UserType {
 			return false;
 		}
 
-		if ( in_array( $rod_id, $rod_assigned) ) {
+		if ( in_array( $rod_id, $rod_assigned ) ) {
 			return true;
 		}
 		return false;
