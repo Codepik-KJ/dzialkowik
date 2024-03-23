@@ -1,12 +1,13 @@
 <?php
 namespace Dzialkowik\OpenWeather;
 
+use Dzialkowik\API\APIConfig;
 use Dzialkowik\Logger\Logger;
 use Dzialkowik\Taxonomies\CityTax;
 use stdClass;
 use function Env\env;
 
-class OWConfig {
+class OWConfig extends APIConfig {
 	private $api_key;
 	private $units;
 
@@ -22,23 +23,9 @@ class OWConfig {
 		if ( ! $lat_lng ) {
 			return false;
 		}
-		$url      = 'https://api.openweathermap.org/data/2.5/weather?lat=' . $lat_lng['lat'] . '&lon=' . $lat_lng['lng'] . '&exclude=alerts&units=' . $this->units . '&appid=' . $this->api_key;
-		$response = json_decode( wp_remote_request( $url )['body'] );
-		if ( ! is_object( $response ) ) {
-			$logger = new Logger();
-			$logger->log( 'ERROR: Request response is not an object. In web/app/themes/juniper-theme/inc/OpenWeather/OWConfig.php:' . __LINE__ );
-			return false;
-		}
-		return $this->check_request_response( json_decode( wp_remote_request( $url )['body'] ) );
-	}
-
-	public function check_request_response( $response ) {
-		if ( 200 !== $response->cod ) {
-			$logger = new Logger();
-			$logger->log( 'ERROR: ' . $response->cod . ' ' . $response->message );
-			return false;
-		}
-		return $response;
+		$open_weather_request_url = 'https://api.openweathermap.org/data/2.5/weather?lat=' . $lat_lng['lat'] . '&lon=' . $lat_lng['lng'] . '&exclude=alerts&units=' . $this->units . '&appid=' . $this->api_key;
+		$open_weather_request     = wp_remote_request( $open_weather_request_url );
+		return $this->check_request_response( $open_weather_request );
 	}
 
 	public function get_cached_weather_data( $term_id ) {
@@ -46,8 +33,10 @@ class OWConfig {
 		if ( ! $get_open_weather_data ) {
 			return $this->set_cached_weather_data( $term_id );
 		}
-		return $get_open_weather_data;
+
+		return $this->check_request_decode( $get_open_weather_data );
 	}
+
 
 	public function set_cached_weather_data( $term_id ) {
 		$request_for_weather_data = $this->request_for_weather_data( $term_id );

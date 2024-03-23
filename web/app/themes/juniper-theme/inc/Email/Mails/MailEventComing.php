@@ -42,6 +42,14 @@ class MailEventComing extends EmailConfig {
 		return true;
 	}
 
+	public function check_if_email_already_sent( $event_id ): bool {
+		$send_email = get_field( 'email_was_sent', $event_id );
+		if ( empty( $send_email ) ) {
+			return false;
+		}
+		return true;
+	}
+
 	public function send_event_email() {
 		$events = $this->event_cpt->get_all_available_events();
 		$logger = new Logger();
@@ -53,7 +61,11 @@ class MailEventComing extends EmailConfig {
 		$user_config = new UserConfig();
 
 		foreach ( $events as $event ) {
+			$logger->log( 'Sending event email' );
 			if ( $this->check_if_send_email( $event['ID'] ) === false ) {
+				continue;
+			}
+			if ( $this->check_if_email_already_sent( $event['ID'] ) === true ) {
 				continue;
 			}
 			if ( $this->check_if_is_global( $event['ID'] ) ) {
@@ -66,7 +78,7 @@ class MailEventComing extends EmailConfig {
 			}
 			foreach ( $recipients as $user_id ) {
 				$this->prepare_email_data( $event, $user_id );
-				$this->handle_email_send();
+				$this->handle_email_send( $event['ID'] );
 			}
 		}
 
