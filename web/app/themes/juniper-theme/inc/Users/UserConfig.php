@@ -69,4 +69,32 @@ class UserConfig {
 		return $all_users;
 	}
 
+	public function count_users_with_role( $role ): ?int {
+		$current_user_id = get_current_user_id();
+		$args            = array(
+			'role'       => $role,
+			'meta_key'   => 'created_by_user_id',
+			'meta_value' => $current_user_id,
+
+		);
+		$users = get_users( $args );
+		return count( $users );
+	}
+
+	public function modify_pre_count_users_defaults( $result, $strategy, $site_id ) {
+		if ( current_user_can( 'administrator' ) ) {
+			return $result;
+		}
+		$available_roles = array(
+			'plot_user',
+			'rod_user',
+		);
+		foreach ( $available_roles as $role ) {
+			$result['avail_roles'][ $role ] = $this->count_users_with_role( $role );
+		}
+		$result['total_users'] = $result['avail_roles']['plot_user'] + $result['avail_roles']['rod_user'];
+
+		return $result;
+	}
+
 }

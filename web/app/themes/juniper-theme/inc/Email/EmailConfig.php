@@ -75,10 +75,13 @@ class EmailConfig {
 		return false;
 	}
 
-	public function handle_email_send() {
+	public function handle_email_send( $event_id ) {
+		$logger = new Logger();
 		if ( ! $this->send_email() ) {
-			$logger = new Logger();
 			$logger->log( 'Error sending email' );
+		} else {
+			$logger->log( 'Email sent' );
+			update_field( 'email_was_sent', true, $event_id );
 		}
 	}
 }
