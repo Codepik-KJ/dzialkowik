@@ -73,3 +73,5 @@ add_action(
 	}
 );
 
+
+add_filter( 'pre_count_users', array( $rod_user, 'modify_pre_count_users_defaults' ), 10, 3 );

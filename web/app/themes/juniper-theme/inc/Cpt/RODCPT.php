@@ -82,8 +82,8 @@ class RODCPT extends ConfigCPT {
 		}
 		$city     = get_post_meta( $post_id, 'city', true );
 		$city_tax = new CityTax();
-		$city_tax->update_city_coords( $city );
 		wp_set_object_terms( $post_id, array( $city ), 'city' );
+		$city_tax->update_city_coords( $city );
 	}
 
 	public function query_rods( $post_id ) {

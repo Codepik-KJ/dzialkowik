@@ -45,10 +45,11 @@ class CityTax {
 		}
 		$term_lat_lng = get_term_meta( $term_id, 'lat_lng', true );
 
-		if ( ! $term_lat_lng ) {
+		if ( empty( $term_lat_lng ) ) {
 			$google_maps_config = new GoogleMapsConfig();
 			$term_lat_lng       = $google_maps_config->request_for_google_maps_data( $city );
 			if ( ! $term_lat_lng ) {
+				delete_term_meta( $term_id, 'lat_lng' );
 				return;
 			}
 			update_term_meta( $term_id, 'lat_lng', $term_lat_lng );
@@ -61,6 +62,7 @@ class CityTax {
 		if ( empty( $exploded_string[0] ) || empty( $exploded_string[1] ) ) {
 			$logger = new Logger();
 			$logger->log( 'ERROR: City coords are invalid. In get_city_coords( $term_id) In web/app/themes/juniper-theme/inc/Taxonomies/CityTax.php on line:' . __LINE__ );
+			delete_term_meta( $term_id, 'lat_lng' );
 			return false;
 		}
 		return array(
